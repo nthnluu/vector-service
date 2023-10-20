@@ -29,6 +29,8 @@ class VectorServiceServicer(vector_service_pb2_grpc.VectorServiceServicer):
         # TODO: Not yet implemented
         transformer.compare_similarity(request.input_embedding)
         response = vector_service_pb2.GetSimilarityResponse()
+        response.matches = []
+
         return response
 
     def LoadQueries(self, request, context):

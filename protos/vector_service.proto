@@ -30,11 +30,12 @@ message GetEmbeddingResponse {
 message GetSimilarityRequest {
   // The query embedding for which similarity is to be calculated.
   string query_embedding = 1;
+
+  float similarity_threshold = 2;
 }
 
 message GetSimilarityResponse {
-  // The similarity score between the query embedding and the target embeddings.
-  float similarity_score = 1;
+  repeated string matches = 1;
 }
 
 message LoadQueryRequest {
