@@ -11,6 +11,10 @@ service VectorService {
 
   // GetSimilarity calculates the similarity between a query embedding and a list of data embeddings.
   rpc GetSimilarity(GetSimilarityRequest) returns (GetSimilarityResponse);
+
+  // LoadQueries loads a list of queries into the service. These queries will be converted to embeddings and stored for
+  // future similarity checks.
+  rpc LoadQueries(LoadQueryRequest) returns (LoadQueryResponse);
 }
 
 message GetEmbeddingRequest {
@@ -25,13 +29,20 @@ message GetEmbeddingResponse {
 
 message GetSimilarityRequest {
   // The query embedding for which similarity is to be calculated.
-  Embedding query_embedding = 1;
-
-  // List of embeddings against which the query embedding's similarity will be checked.
-  repeated Embedding target_embeddings = 2;
+  string query_embedding = 1;
 }
 
 message GetSimilarityResponse {
   // The similarity score between the query embedding and the target embeddings.
   float similarity_score = 1;
 }
+
+message LoadQueryRequest {
+  // List of queries to be loaded. These will be converted to embeddings and stored for future similarity checks.
+  repeated string queries = 1;
+}
+
+message LoadQueryResponse {
+}
+
+

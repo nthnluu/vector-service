@@ -4,6 +4,13 @@ import logging
 import vector_service_pb2_grpc
 import vector_service_pb2
 
+from datasets import load_dataset
+
+from text_transformer.text_transformer import TextTransformer, clean_text
+
+# Initialize text transformer
+transformer = TextTransformer("justin871030/bert-base-uncased-goemotions-original-finetuned")
+
 
 # VectorServiceServicer provides an implementation of the methods of the Vector service.
 class VectorServiceServicer(vector_service_pb2_grpc.VectorServiceServicer):
@@ -20,11 +27,21 @@ class VectorServiceServicer(vector_service_pb2_grpc.VectorServiceServicer):
         Computes and returns the similarity between two vectors.
         """
         # TODO: Not yet implemented
+        transformer.compare_similarity(request.input_embedding)
         response = vector_service_pb2.GetSimilarityResponse()
         return response
 
+    def LoadQueries(self, request, context):
+        """
+        Loads the queries into the text transformer.
+        """
+        cleaned_queries = [clean_text(query) for query in request.queries]
+        transformer.load_queries(cleaned_queries)
+        return vector_service_pb2.LoadQueryResponse()
+
 
 def serve():
+    # Start server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     vector_service_pb2_grpc.add_VectorServiceServicer_to_server(
         VectorServiceServicer(), server
